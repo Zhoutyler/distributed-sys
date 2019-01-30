@@ -1,0 +1,45 @@
+Part 1(a)
+=========
+
+1.  What actions does a kernel perform to context switch between processes?
+
+Kernel will setup a timer to interrupt running process on a regular basis. When the interrupt happens, program enters kernel mode. Hardware like registers, PC will save their values into program A's kernel stack. Then kernel will call switch() as interrupt handler, save and restore process status to and from memory, switch to process B's kernel stack and restore hardware values. Finally it heads back into user mode of process B.
+
+
+2.  What process state does a process enter immediately after it terminates?
+    What is this state for, and when does it leave this state?
+
+It will enter the ZOMBIE state. It is for parent process to check its return value and make final decision. When finished, the parent could make one final system call to tell OS to do cleanup.
+
+
+Part 1(b)
+=========
+
+3.  What is typeof? Is it a C language keyword, function, or macro? What does
+    it do?
+
+It's a keyword. It refers to type of the expression.
+
+
+4.  What is offsetof? Is it a keyword, function, or macro? What does it do?
+
+It's a macro. It returns the offset of field "member" from beginning of structure "type". Return type is size_t.
+
+
+5.  What does the container_of() macro do?
+
+It returns a struct "type" pointer given the "member" pointer ptr.
+
+
+6.  The container_of() macro, in the way it’s currently written, is not
+    portable across C compilers because it uses GNU-specific language
+    extensions. Can you identify what they are?
+
+The typeof() and ({...}) are GNU C extensions.
+
+
+7.  The container_of() macro has two lines. Is the 1st line (the declaration of
+    __mptr) really necessary? Is it possible to rewrite the macro without it?
+    What is the purpose of that 1st line?
+
+It's necessary. If the macro is rewrite without it, a malicious user might pass a mismatched type of pointer, and will be able to visit a piece of memory that is not expected by the program. It performs a type check on ptr. If ptr is not a member pointer, compiler will complain.
